@@ -1,90 +1,59 @@
-## CONDOR Project: Analysis and Visualization of the Spatio-Temporal Particle Distribution
+# CONDOR Project
 
-# Overview
-This repository contains the code and scripts developed for the CONDOR Project, focusing on the analysis and visualization of the spatio-temporal distribution of incident particles on a detector array. The project is divided into several stages: data preprocessing, binning of particle positions and times, and visualization through 2D and 3D plots to interpret the results.
+This repository contains the code and data for the analysis of particle distributions in time and space as part of the CONDOR Observatory project.
 
-The main goal is to group the particles that reach different areas of the detector array within short time intervals (in nanoseconds) and visualize how they are distributed across space and time. This allows studying the dynamics of particles in the detector and their relationship with parameters such as incidence energy, angle, and position.
+## Overview
 
-# Project Structure
-The project is organized into three main parts:
+The main objective of this project is to process and analyze particle data from simulations, particularly focusing on particles with energy levels of 1.0E+03 GeV. The analysis includes reading data from specified files, filtering outliers, and generating visualizations that illustrate the spatial and temporal distributions of particles.
 
-- Data Preprocessing
-- Spatio-Temporal Binning
-- Results Visualization
+## Directory Structure
 
-# 1. Data Preprocessing
-The preprocessing step involves cleaning and organizing the raw data of incident particles. In the original particle dataframe, the columns include x, y (spatial positions on the detector array), t (time in nanoseconds), and energy (particle energy).
-
-Key steps in this section:
-
-- Spatial filtering: Particles outside the bounds of the detector array are removed. The total detector area covers 122 x 113 meters.
-- Temporal adjustment: Time values are normalized by subtracting the minimum time so that the analysis starts at t = 0 (nanoseconds).
-
-```python
-particles_df['t'] = particles_df['t'] - particles_df['t'].min()
-particles_df = particles_df.sort_values(by='t', ascending=True).reset_index(drop=True)
+```
+CONDOR_Project/
+│
+├── dataextract.py  # Main Python script for data processing and visualization
+├── datapreprocessing.ipynb  # Jupyter Notebook script for data processing and visualization. Contains more analysis like correlation matrices and other spacial distribution plots.
+├── output/         # Directory where output files will be saved
+│   ├── output_particleid_14_angle_0_energy_1.0e+03/
+│   │   ├── all_data_particleid_14_angle_0_energy_1.0e+03.csv
+│   │   ├── binned_data_particleid_14_angle_0_energy_1.0e+03.csv
+│   │   ├── 2D_particle_distribution_particleid_14_angle_0_energy_1.0e+03.png
+│   │   ├── 3D_particle_distribution_particleid_14_angle_0_energy_1.0e+03.png
+│   │   ├── particles_animation_2D_particleid_14_angle_0_energy_1.0e+03.gif
+│   │   └── particles_animation_3D_particleid_14_angle_0_energy_1.0e+03.gif
+│   └── ...         # Other configurations as needed
+└── README.md       # This readme file
 ```
 
-# 2. Spatio-Temporal Binning
-The core idea is to bin particles into fixed spatial and temporal intervals to count how many particles arrive at certain areas within the same nanosecond. The particles are grouped into "bins" of space (e.g., 1x1 meter) and time (e.g., 1 ns).
+**output_particleid_X_angle_Y_energy_Z/**: Contains output files for each particle configuration where `X` is the particle ID, `Y` is the incidence angle, and `Z` is the incidence energy. Inside each folder, you'll find:
 
-Key steps:
+  - `all_data_particleid_X_angle_Y_energy_Z.csv`: A CSV file containing all processed particle data including coordinates and additional metadata.
+  - `binned_data_particleid_X_angle_Y_energy_Z.csv`: A CSV file showing binned particle counts based on spatial and temporal bins.
+  - `2D_particle_distribution_particleid_X_angle_Y_energy_Z.png`: A 2D heatmap representing the particle density across spatial bins.
+  - `3D_particle_distribution_particleid_X_angle_Y_energy_Z.png`: A 3D scatter plot showing particle distribution in space and time.
+  - `particles_animation_3D_particleid_X_angle_Y_energy_Z.gif`: A 3D animation illustrating how particles are distributed over time.
+  - `particles_animation_2D_particleid_X_angle_Y_energy_Z.gif`: A 2D animation demonstrating the temporal distribution of particles.
 
-Create fixed-size bins for both the spatial coordinates (x_bin, y_bin) and the time (t_bin).
-Group the particles by these bins and count how many fall into each.
+## Plot Explanations
 
-```python
-particles_df['x_bin'] = np.floor(particles_df['x']).astype(int)
-particles_df['y_bin'] = np.floor(particles_df['y']).astype(int)
-particles_df['t_bin'] = np.floor(particles_df['t'] / time_bin_size).astype(int)
-binned_particles = particles_df.groupby(['x_bin', 'y_bin', 't_bin']).size().reset_index(name='particle_count')
+1. **2D Heatmap**: The 2D heatmap visualizes the density of particles in spatial bins (1m x 1m). Each cell in the heatmap corresponds to a specific spatial bin, and the color intensity represents the number of particles that fall within that bin. This provides a clear view of how particle density varies spatially.
+
+2. **3D Particle Distribution**: The 3D scatter plot displays the distribution of particles across the x, y, and time bins. Each point represents a particle, and the color indicates the number of particles in that bin. This plot helps to visualize the particle dispersion in three-dimensional space over time.
+
+3. **Animations**: Both the 2D and 3D animations show how particle distributions evolve over time. In the 2D animation, the scatter plot updates to show the current distribution of particles in the x-y plane for each time bin. The 3D animation allows for dynamic visualization of particle movement and concentration over time, enhancing the understanding of their behavior.
+
+## Requirements
+
+Make sure you have the following Python packages installed:
+
+- `pandas`
+- `numpy`
+- `seaborn`
+- `matplotlib`
+- `scikit-learn`
+
+You can install these packages using pip:
+
+```bash
+pip install pandas numpy seaborn matplotlib scikit-learn
 ```
-
-# 3. Results Visualization
-To interpret the results, both 2D and 3D animated plots are created to show the spatio-temporal distribution of particles. The plots are designed to highlight areas with higher particle concentrations and show how these change over time.
-
-- 2D Animation: Represents particles in the x-y plane for different times (t_bin), showing how the spatial distribution of particles evolves over time.
-- 3D Animation: Displays the evolution of the spatial distribution (x, y) with a third dimension representing time (z = t_bin).
-
-Both types of animation are saved as .gif files and are configured to display the exact time of each frame in the title of the plots.
-
-# Example of 3D Plot
-
-```python
-x = filtered_particles['x_bin']
-y = filtered_particles['y_bin']
-z = filtered_particles['t_bin']
-particle_count = filtered_particles['particle_count']
-
-fig = go.Figure(data=[go.Scatter3d(
-    x=x,
-    y=y,
-    z=z,
-    mode='markers',
-    marker=dict(
-        size=5,
-        color=particle_count,  # Color based on particle count
-        colorscale='tealrose',
-        colorbar=dict(title='Particle Count'), 
-        opacity=0.5
-    )
-)])
-
-fig.update_layout(
-    title='3D Particle Distribution in Time and Space',
-    scene=dict(
-        xaxis_title='X Bin',
-        yaxis_title='Y Bin',
-        zaxis_title='Time Bin'
-    ),
-    margin=dict(l=0, r=0, b=0, t=0)
-)
-
-# Display the plot
-fig.show()
-```
-
-# Files
-- Preprocessing Scripts: Scripts that preprocess the raw particle data (datapreprocessing.ipynb).
-- Binned Dataframe: The dataframe (at .csv format) that bins the particles spatially and temporally.
-- Visualization gifs: Gifs that generate 2D and 3D animations of the spatio-temporal distribution.
