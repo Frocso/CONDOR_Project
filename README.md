@@ -25,7 +25,8 @@ CONDOR_Project/
 └── README.md       # This readme file
 ```
 
-- **output_particleid_X_angle_Y_energy_Z/**: Contains output files for each particle configuration where `X` is the particle ID, `Y` is the incidence angle, and `Z` is the incidence energy. Inside each folder, you'll find:
+**output_particleid_X_angle_Y_energy_Z/**: Contains output files for each particle configuration where `X` is the particle ID, `Y` is the incidence angle, and `Z` is the incidence energy. Inside each folder, you'll find:
+
   - `all_data_particleid_X_angle_Y_energy_Z.csv`: A CSV file containing all processed particle data including coordinates and additional metadata.
   - `binned_data_particleid_X_angle_Y_energy_Z.csv`: A CSV file showing binned particle counts based on spatial and temporal bins.
   - `2D_particle_distribution_particleid_X_angle_Y_energy_Z.png`: A 2D heatmap representing the particle density across spatial bins.
