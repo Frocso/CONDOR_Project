@@ -57,3 +57,5 @@ You can install these packages using pip:
 ```bash
 pip install pandas numpy seaborn matplotlib scikit-learn
 ```
+
+## MISSING VALUES/FOLDERS (FOR CONDOR AREA LIMITED PLOTS) JUST MEANS THAT THERE ARE NO PARTICLES IN THE AREA FOR THAT CONFIGURATION.
