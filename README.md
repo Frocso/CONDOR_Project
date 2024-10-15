@@ -4,7 +4,7 @@ This repository contains the code and data for the analysis of particle distribu
 
 ## Overview
 
-The main objective of this project is to process and analyze particle data from simulations, particularly focusing on particles with energy levels of 1.0E+03 GeV. The analysis includes reading data from specified files, filtering outliers, and generating visualizations that illustrate the spatial and temporal distributions of particles.
+The main objective of this project is to process and analyze particle data from simulations. The analysis includes reading data from specified files, filtering outliers, and generating visualizations that illustrate the spatial and temporal distributions of particles.
 
 ## Directory Structure
 
