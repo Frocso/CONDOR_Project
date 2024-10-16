@@ -13,6 +13,7 @@ CONDOR_Project/
 │
 ├── dataextract.py  # Main Python script for data processing and visualization
 ├── datapreprocessing.ipynb  # Jupyter Notebook script for data processing and visualization. Contains more analysis like correlation matrices and other spacial distribution plots.
+├── panamatranslate.ipynb # Jupyter Notebook script for CORSIKA .DAT Binary files translation and data visualization
 ├── output/         # Directory where output files will be saved
 │   ├── output_particleid_14_angle_0_energy_1.0e+03/
 │   │   ├── all_data_particleid_14_angle_0_energy_1.0e+03.csv
